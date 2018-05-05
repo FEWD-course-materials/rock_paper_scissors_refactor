@@ -6,13 +6,13 @@ var playerScore = 0;
 var botScore = 0;
 
 function playRock() {
-    checkWhoWins("rock");
+    playOneRound("rock");
 }
 function playScissors() {
-    checkWhoWins("scissors");
+    playOneRound("scissors");
 }
 function playPaper() {
-    checkWhoWins("paper");
+    playOneRound("paper");
 }
 
 function botMoveSelector() {
@@ -21,48 +21,44 @@ function botMoveSelector() {
     return moves[randomIntegerFromZeroToTwo];
 }
 
-function checkWhoWins(playerMove) {
-    
+function playOneRound(playerMove) {
     var botMove = botMoveSelector(); // rock, paper, scissors
     
     $("#status").html("<p>You played " + playerMove + ". The bot played " + botMove + ".</p>");
-    
-    if (playerMove === "rock") {
-        if (botMove === "rock") {
-            $("#status").append("<p>You tied.</p>")
-        } else if (botMove === "scissors") {
-            $("#status").append("<p>You win.</p>")
-            playerScore += 1;
-            $("#humanScore").html(playerScore);
-        } else if (botMove === "paper") {
-            $("#status").append("<p>You lose.</p>")
-            botScore += 1;
-            $("#computerScore").html(botScore);
-        }
-    } else if (playerMove === "scissors") {
-        if (botMove === "scissors") {
-            $("#status").append("<p>You tied.</p>")
-        } else if (botMove === "paper") {
-            $("#status").append("<p>You win.</p>")
-            playerScore += 1;
-            $("#humanScore").html(playerScore);
-        } else if (botMove === "rock") {
-            $("#status").append("<p>You lose.</p>")
-            botScore += 1;
-            $("#computerScore").html(botScore);
-        }
-    } else if (playerMove === "paper") {
-        if (botMove === "paper") {
-            $("#status").append("<p>You tied.</p>")
-        } else if (botMove === "rock") {
-            $("#status").append("<p>You win.</p>")
-            playerScore += 1;
-            $("#humanScore").html(playerScore);
-        } else if (botMove === "scissors") {
-            $("#status").append("<p>You lose.</p>")
-            botScore += 1;
-            $("#computerScore").html(botScore);
-        }
-    }
 
+    var playerWinCondition = (playerMove === "rock" && botMove === "scissors") ||
+                            (playerMove === "scissors" && botMove === "paper") ||
+                            (playerMove === "paper" && botMove === "rock");
+
+    var botWinCondition = (botMove === "rock" && playerMove === "scissors") ||
+                        (botMove === "scissors" && playerMove === "paper") ||
+                        (botMove === "paper" && playerMove === "rock");
+    
+    if (playerMove === botMove) {
+        onTie();
+    } else if (playerWinCondition) {
+        onPlayerWin();
+    } else if () {
+        onBotWin(botWinCondition);
+    }
+}
+
+function onPlayerWin() {
+    appendResult("You win.");
+    playerScore += 1;
+    $("#humanScore").html(playerScore);
+}
+
+function onBotWin() {
+    appendResult("You lose.");
+    botScore += 1;
+    $("#computerScore").html(botScore);
+}
+
+function onTie() {
+    appendResult("You tied.");
+}
+
+function appendResult(resultText) {
+    $("#status").append("<p>" + resultText + "</p>")
 }
